@@ -43,6 +43,7 @@ main
 *.su
 *.idb
 *.pdb
+.breakpoints
 main_debug
 
 # Kernel Module Compile Results
@@ -53,7 +54,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#Other Files
 *cache*
-.breakpoints
 *replit*
 *upm
