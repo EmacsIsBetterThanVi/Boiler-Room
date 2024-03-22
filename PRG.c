@@ -107,6 +107,22 @@ while (true) {
         file[PC];
       file[tmp]=REGISTERS[244];
       break;
+    case 0x07: // MARB
+      PC++;
+      REGISTERS[file[PC]]= REGISTERS[244];
+      break;
+    case 0x08: // MARD
+      PC++;
+      REGISTERS[file[PC]]= REGISTERS[243];
+      REGISTERS[file[PC]+1]= REGISTERS[244];
+      break;
+    case 0x09: // MARI
+      PC++;
+      REGISTERS[file[PC]]= REGISTERS[241];
+      REGISTERS[file[PC]+1]= REGISTERS[242];
+      REGISTERS[file[PC]+2]= REGISTERS[243];
+      REGISTERS[file[PC]+3]= REGISTERS[244];
+      break;
   }
   PC++;
   if (file[PC] == 0x00) {

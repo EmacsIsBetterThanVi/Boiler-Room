@@ -56,8 +56,12 @@ Mkfile.old
 dkms.conf
 
 #Other Files
-*cache*
-*replit*
-*upm
-.local
+.ccls-cache/**/*
+**/*.blob
+.cache/**/*
+.config/**/*
+.local/**/*
+replit.nix
+.replit
+.upm/**/*
 OpenFluxbox.class
