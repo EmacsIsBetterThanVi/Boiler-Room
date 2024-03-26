@@ -21,7 +21,7 @@ int tmp;
 while (true) {
   PC = ((REGISTERS[249] * 16 + REGISTERS[250]) * 16 + REGISTERS[251]) * 16 + REGISTERS[252];
   switch (file[PC]) {
-  case 0x01: // LDAI
+  case 0x03: // LDAI
     PC++;
     REGISTERS[253] = file[PC];
     PC++;
@@ -51,7 +51,7 @@ while (true) {
     REGISTERS[243] = file[tmp];
     REGISTERS[244] = file[tmp + 1];
     break;
-  case 0x03: //LDAB
+  case 0x01: //LDAB
     PC++;
     REGISTERS[253] = file[PC];
     PC++;
@@ -66,152 +66,149 @@ while (true) {
     REGISTERS[243] = 0;
     REGISTERS[244] = file[tmp];
     break;
-    case 0x04: // WDAI
-      PC++;
-      REGISTERS[253] = file[PC];
-      PC++;
-      REGISTERS[254] = file[PC];
-      PC++;
-      REGISTERS[255] = file[PC];
-      PC++;
-      tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) +
-            file[PC];
-      file[tmp]=REGISTERS[241];
-      file[tmp+1]=REGISTERS[242];
-      file[tmp+2]=REGISTERS[243];
-      file[tmp+3]=REGISTERS[244];
-      break;
-    case 0x05: // WDAD
-      PC++;
-      REGISTERS[253] = file[PC];
-      PC++;
-      REGISTERS[254] = file[PC];
-      PC++;
-      REGISTERS[255] = file[PC];
-      PC++;
-      tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) +
-        file[PC];
-      file[tmp]=REGISTERS[243];
-      file[tmp+1]=REGISTERS[244];
-      break;
-    case 0x06: // WDAB
-      PC++;
-      REGISTERS[253] = file[PC];
-      PC++;
-      REGISTERS[254] = file[PC];
-      PC++;
-      REGISTERS[255] = file[PC];
-      PC++;
-      tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) +
-        file[PC];
-      file[tmp]=REGISTERS[244];
-      break;
-    case 0x07: // MARB
-      PC++;
-      REGISTERS[file[PC]]= REGISTERS[244];
-      break;
-    case 0x08: // MARD
-      PC++;
-      REGISTERS[file[PC]]= REGISTERS[243];
-      REGISTERS[file[PC]+1]= REGISTERS[244];
-      break;
-    case 0x09: // MARI
-      PC++;
-      REGISTERS[file[PC]]= REGISTERS[241];
-      REGISTERS[file[PC]+1]= REGISTERS[242];
-      REGISTERS[file[PC]+2]= REGISTERS[243];
-      REGISTERS[file[PC]+3]= REGISTERS[244];
-      break;
-    case 0x0a: // ARAB
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp+=REGISTERS[file[PC]];
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
-    case 0x0b: // ARAD
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp += REGISTERS[file[PC]] * 16 + REGISTERS[file[PC]+1]; 
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
-    case 0x0c: // ARAI
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp += ((REGISTERS[file[PC]] * 16 + REGISTERS[file[PC]+1]) * 16 + REGISTERS[file[PC]+2]) * 16 + REGISTERS[file[PC]+3];
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
-    case 0x0d: // SRAB
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp -= REGISTERS[file[PC]];
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
-    case 0x0e: // SRAD
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp -= REGISTERS[file[PC]] * 16 + REGISTERS[file[PC] + 1]; 
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
-    case 0x0f: // SRAI
-      PC++;
-      tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
-      tmp -= ((REGISTERS[file[PC]] * 16 + REGISTERS[file[PC] + 1]) * 16 + REGISTERS[file[PC] + 2]) * 16 + REGISTERS[file[PC] + 3];
-      REGISTERS[244] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[243] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[242] = tmp % 16;
-      tmp -= tmp % 16;
-      tmp = tmp / 16;
-      REGISTERS[241] = tmp;
-      break;
+  case 0x04: // WDAB
+    PC++;
+    REGISTERS[253] = file[PC];
+    PC++;
+    REGISTERS[254] = file[PC];
+    PC++;
+    REGISTERS[255] = file[PC];
+    PC++;
+    tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) + file[PC];
+    file[tmp]=REGISTERS[244];
+    break;
+  case 0x05: // WDAD
+    PC++;
+    REGISTERS[253] = file[PC];
+    PC++;
+    REGISTERS[254] = file[PC];
+    PC++;
+    REGISTERS[255] = file[PC];
+    PC++;
+    tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) + file[PC];
+    file[tmp]=REGISTERS[243];
+    file[tmp+1]=REGISTERS[244];
+    break;
+  case 0x06: // WDAI
+    PC++;
+    REGISTERS[253] = file[PC];
+    PC++;
+    REGISTERS[254] = file[PC];
+    PC++;
+    REGISTERS[255] = file[PC];
+    PC++;
+    tmp = ((REGISTERS[253] * 16 + REGISTERS[254]) * 16 + REGISTERS[255]) + file[PC];
+    file[tmp]=REGISTERS[241];
+    file[tmp+1]=REGISTERS[242];
+    file[tmp+2]=REGISTERS[243];
+    file[tmp+3]=REGISTERS[244];
+    break;
+  case 0x07: // MARB
+    PC++;
+    REGISTERS[file[PC]]= REGISTERS[244];
+    break;
+  case 0x08: // MARD
+    PC++;
+    REGISTERS[file[PC]]= REGISTERS[243];
+    REGISTERS[file[PC]+1]= REGISTERS[244];
+    break;
+  case 0x09: // MARI
+    PC++;
+    REGISTERS[file[PC]]= REGISTERS[241];
+    REGISTERS[file[PC]+1]= REGISTERS[242];
+    REGISTERS[file[PC]+2]= REGISTERS[243];
+    REGISTERS[file[PC]+3]= REGISTERS[244];
+    break;
+  case 0x0a: // ARAB
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp+=REGISTERS[file[PC]];
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
+  case 0x0b: // ARAD
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp += REGISTERS[file[PC]] * 16 + REGISTERS[file[PC]+1]; 
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
+  case 0x0c: // ARAI
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp += ((REGISTERS[file[PC]] * 16 + REGISTERS[file[PC]+1]) * 16 + REGISTERS[file[PC]+2]) * 16 + REGISTERS[file[PC]+3];
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
+  case 0x0d: // SRAB
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp -= REGISTERS[file[PC]];
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
+  case 0x0e: // SRAD
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp -= REGISTERS[file[PC]] * 16 + REGISTERS[file[PC] + 1]; 
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
+  case 0x0f: // SRAI
+    PC++;
+    tmp = ((REGISTERS[241] * 16 + REGISTERS[242]) * 16 + REGISTERS[243]) * 16 + REGISTERS[244];
+    tmp -= ((REGISTERS[file[PC]] * 16 + REGISTERS[file[PC] + 1]) * 16 + REGISTERS[file[PC] + 2]) * 16 + REGISTERS[file[PC] + 3];
+    REGISTERS[244] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[243] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[242] = tmp % 16;
+    tmp -= tmp % 16;
+    tmp = tmp / 16;
+    REGISTERS[241] = tmp;
+    break;
   }
   PC++;
   if (file[PC] == 0x00) { // HLT

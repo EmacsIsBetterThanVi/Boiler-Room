@@ -6,6 +6,124 @@
 #include <sys/types.h>
 #include <time.h>
 #include "Interrupt.c"
+int stoh(char arg[2]){
+  int x = 0;
+  switch(arg[0]){
+    case '0':
+      break;
+    case '1':
+      x = 0x10;
+      break;
+    case '2':
+      x = 0x20;
+      break;
+    case '3':
+      x = 0x30;
+      break;
+    case '4':
+      x = 0x40;
+      break;
+    case '5':
+      x = 0x50;
+      break;
+    case '6':
+      x = 0x60;
+      break;
+    case '7':
+      x = 0x70;
+      break;
+    case '8':
+      x = 0x80;
+      break;
+    case '9':
+      x = 0x90;
+      break;
+    case 'a':
+    case 'A':
+      x = 0xA0;
+      break;
+    case 'b':
+    case 'B':
+      x = 0xB0;
+      break;
+    case 'c':
+    case 'C':
+      x = 0xC0;
+      break;
+    case 'd':
+    case 'D':
+      x = 0xD0;
+      break;
+    case 'e':
+    case 'E':
+      x = 0xE0;
+      break;
+    case 'f':
+    case 'F':
+      x = 0xF0;
+      break;
+    default:
+      return -1;
+  }
+  switch(arg[1]) {
+    case '0':
+      break;
+    case '1':
+      x += 0x1;
+      break;
+    case '2':
+      x += 0x2;
+      break;
+    case '3':
+      x += 0x3;
+      break;
+    case '4':
+      x += 0x4;
+      break;
+    case '5':
+      x += 0x5;
+      break;
+    case '6':
+      x += 0x6;
+      break;
+    case '7':
+      x += 0x7;
+      break;
+    case '8':
+      x += 0x8;
+      break;
+    case '9':
+      x += 0x9;
+      break;
+    case 'a':
+    case 'A':
+      x += 0xA;
+      break;
+    case 'b':
+    case 'B':
+      x += 0xB;
+      break;
+    case 'c':
+    case 'C':
+      x += 0xC;
+      break;
+    case 'd':
+    case 'D':
+      x += 0xD;
+      break;
+    case 'e':
+    case 'E':
+      x += 0xE;
+      break;
+    case 'f':
+    case 'F':
+      x += 0xF;
+      break;
+    default:
+      return -1;
+  }
+  return x;
+}
 int options(int argc, char **argv, char *target) {
   for (int i = 0; i < argc; i++) {
     if (strcmp(argv[i], target) == 0)
@@ -20,9 +138,9 @@ int VM(char *name) {
     return 1;
   }
   char *file = "";
-  char s[10];
-  while (fgets(s, 10, f)) {
-    asprintf(&file, "%s%s", file, s);
+  char c;
+  while ((c = fgetc(f))!=-1) {
+    asprintf(&file, "%s%c", file, c);
   }
   char REGISTERS[256];
   #include "PRG.c"
@@ -35,11 +153,11 @@ int as(char *name) {
     return 1;
   }
   char *file = "";
-  char s[10];
-  while (fgets(s, 10, f)) {
-    asprintf(&file, "%s%s", file, s);
+  char c;
+  while ((c = fgetc(f))!=-1) {
+    asprintf(&file, "%s%c", file, c);
   }
-#include "ASM.c"
+  #include "ASM.c"
   return 0;
 }
 int main(int argc, char **argv) {
