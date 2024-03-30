@@ -211,7 +211,7 @@ while (true) {
     break;
   }
   PC++;
-  if (file[PC] == 0x00) { // HLT
+  if (file[PC] == 0xFF) { // HLT
     break;
   }
   REGISTERS[252] = PC % 16;

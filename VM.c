@@ -168,8 +168,8 @@ int main(int argc, char **argv) {
       } else if (options(argc, argv, "-e") != -1) {
         return VM(argv[argc - 1]);
       } else if (options(argc, argv, "-v") != -1) {
-        printf("Asembler Version:0.0.0\n");
-        printf("Virtual Machine Version:0.0.0\n");
+        printf("Asembler Version:0.3.0\n");
+        printf("Virtual Machine Version:0.4.0\n");
         char *date;
         struct stat attr;
         stat(argv[argc - 1], &attr);
