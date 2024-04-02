@@ -124,6 +124,12 @@ int stoh(char arg[2]){
   }
   return x;
 }
+void htos(char *y, int x){
+  y[1] = "0123456789abcdef"[x%16];
+  x = x-(x%16);
+  x = x/16;
+  y[0] = "0123456789abcdef"[x];
+}
 int options(int argc, char **argv, char *target) {
   for (int i = 0; i < argc; i++) {
     if (strcmp(argv[i], target) == 0)
@@ -139,8 +145,17 @@ int VM(char *name) {
   }
   char *file = "";
   char c;
+  char tmp[2] = "";
+  bool tmp1 = false;
   while ((c = fgetc(f))!=-1) {
-    asprintf(&file, "%s%c", file, c);
+    if(tmp1){
+      tmp[1] = c;
+      asprintf(&file, "%s%c", file, stoh(tmp));
+      tmp1=false;
+    } else {
+      tmp[0] = c;
+      tmp1=true;
+    }
   }
   char REGISTERS[256];
   #include "PRG.c"

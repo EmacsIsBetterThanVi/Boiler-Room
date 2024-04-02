@@ -9,6 +9,7 @@ while (file[address] != 0x00) {
     if (file[address] == 0x20) {
       token_id++;
     }
+    if
     address++;
   }
   if (tokens[0] == "LDAB") {
