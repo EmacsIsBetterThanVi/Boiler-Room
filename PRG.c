@@ -209,6 +209,12 @@ while (true) {
     tmp = tmp / 16;
     REGISTERS[241] = tmp;
     break;
+  case 0x10: //CLA
+    REGISTERS[244]=0;
+    REGISTERS[243]=0;
+    REGISTERS[242]=0;
+    REGISTERS[241]=0;
+    break;
   }
   PC++;
   if (file[PC] == 0xFF) { // HLT
