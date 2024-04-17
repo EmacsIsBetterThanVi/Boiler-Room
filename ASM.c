@@ -31,22 +31,36 @@ while (file[address] != 0x00) {
   while (file[address] != 0x0a && file[address] != 0x23) {
     asprintf(&tokens[token_id], "%s%c", tokens[token_id], file[address]);
     if (file[address] == 0x20) {
-      if (tokens[token_id] == "%A" ){
+      if (tokens[token_id] == "%A") {
         binaddress = binaddress + 5;
-        tmp[3]=binadress % 256;
-        tmp[4]=binadress - (binadress % 256);
-        tmp[4]=tmp[4]/256;
-        tmp[2]=tmp[4] % 256;
+        tmp[4] = binaddress + 1 + token_id;
+        tmp[3] = tmp[4] % 256;
+        tmp[4] = tmp[4] - (tmp[4] % 256);
+        tmp[4] = tmp[4] / 256;
+        tmp[2] = tmp[4] % 256;
         tmp[4] = tmp[4] - (tmp[4] % 256);
         tmp[4] = tmp[4] / 256;
         tmp[1] = tmp[4] % 256;
         tmp[4] = tmp[4] - (tmp[4] % 16);
         tmp[4] = tmp[4] / 16;
         tmp[0] = tmp[4];
-        asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x04, );
+        asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x04, tmp[0], tmp[1],
+                 tmp[2], tmp[3]);
       } else if (tokens[token_id][0] == '%') {
-        binaddress = binaddress + 5;
-        asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x08, 0xED, 0x10, 0x0C, stoh(tokens[token_id]));
+        binaddress = binaddress + 9;
+        tmp[4] = binaddress + 1 + token_id;
+        tmp[3] = tmp[4] % 256;
+        tmp[4] = tmp[4] - (tmp[4] % 256);
+        tmp[4] = tmp[4] / 256;
+        tmp[2] = tmp[4] % 256;
+        tmp[4] = tmp[4] - (tmp[4] % 256);
+        tmp[4] = tmp[4] / 256;
+        tmp[1] = tmp[4] % 256;
+        tmp[4] = tmp[4] - (tmp[4] % 16);
+        tmp[4] = tmp[4] / 16;
+        tmp[0] = tmp[4];
+        asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x08, 0xED, 0x10, 0x0C,
+                 stoh(tokens[token_id]), tmp[0], tmp[1], tmp[2], tmp[3]);
       }
       token_id++;
     }
@@ -54,20 +68,24 @@ while (file[address] != 0x00) {
   }
   if (tokens[0] == "LDAB") {
     binaddress += 5;
-    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x01, stoh(tokens[1]),stoh(tokens[2]),stoh(tokens[3]),stoh(tokens[4]));
+    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x01, stoh(tokens[1]),
+             stoh(tokens[2]), stoh(tokens[3]), stoh(tokens[4]));
   } else if (tokens[0] == "LDAD") {
     binaddress += 5;
-    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x02, stoh(tokens[1]),stoh(tokens[2]),stoh(tokens[3]),stoh(tokens[4]));
+    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x02, stoh(tokens[1]),
+             stoh(tokens[2]), stoh(tokens[3]), stoh(tokens[4]));
   } else if (tokens[0] == "LDAI") {
     binaddress += 5;
     asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x03, stoh(tokens[1]),
              stoh(tokens[2]), stoh(tokens[3]), stoh(tokens[4]));
   } else if (tokens[0] == "WDAB") {
     binaddress += 5;
-    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x04, stoh(tokens[1]),stoh(tokens[2]),stoh(tokens[3]),stoh(tokens[4]));
+    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x04, stoh(tokens[1]),
+             stoh(tokens[2]), stoh(tokens[3]), stoh(tokens[4]));
   } else if (tokens[0] == "WDAD") {
     binaddress += 5;
-    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x05, stoh(tokens[1]),stoh(tokens[2]),stoh(tokens[3]),stoh(tokens[4]));
+    asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x05, stoh(tokens[1]),
+             stoh(tokens[2]), stoh(tokens[3]), stoh(tokens[4]));
   } else if (tokens[0] == "WDAI") {
     binaddress += 5;
     asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x06, stoh(tokens[1]),
