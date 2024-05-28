@@ -19,6 +19,7 @@ R255:   THIRD BYTE
 int PC;
 int tmp;
 while (true) {
+  int indentifier;
   int SP = ((REGISTERS[245] * 256 + REGISTERS[246]) * 256 + REGISTERS[247]) * 256 + REGISTERS[248];
   PC = ((REGISTERS[249] * 256 + REGISTERS[250]) * 256 + REGISTERS[251]) * 256 + REGISTERS[252];
   switch (file[PC]) {
@@ -218,18 +219,18 @@ while (true) {
     break;
   case 0x11: //INB
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     read(client_socket[indentifier], &REGISTERS[244], 1);
     break;
   case 0x12: //IND
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     read(client_socket[indentifier], &REGISTERS[243], 1);
     read(client_socket[indentifier], &REGISTERS[244], 1);
     break;
   case 0x13: //INI
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     read(client_socket[indentifier], &REGISTERS[241], 1);
     read(client_socket[indentifier], &REGISTERS[242], 1);
     read(client_socket[indentifier], &REGISTERS[243], 1);
@@ -237,18 +238,18 @@ while (true) {
     break;
   case 0x14: //OUTB
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     write(client_socket[indentifier], &REGISTERS[244], 1);
     break;
   case 0x15: //OUTD
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     write(client_socket[indentifier], &REGISTERS[243], 1);
     write(client_socket[indentifier], &REGISTERS[244], 1);
     break;
   case 0x16: //OUTI
     PC++;
-    int indentifier = file[PC] % 16
+    indentifier = file[PC] % 16;
     write(client_socket[indentifier], &REGISTERS[241], 1);
     write(client_socket[indentifier], &REGISTERS[242], 1);
     write(client_socket[indentifier], &REGISTERS[243], 1);

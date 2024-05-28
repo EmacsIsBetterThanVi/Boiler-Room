@@ -1,4 +1,4 @@
-all: clean main config
+all: clean main config ports
 
 CC = clang
 override CFLAGS += -g -Wno-everything -pthread -lm
@@ -15,5 +15,9 @@ main-debug: VM.c $(HEADERS)
 clean:
 	rm -f main main-debug
 
+ports:
+	./buildports
+	
 config:
+	mkdir ~/.local/bin/BoilerRoom -p
 	cp init.sh ~/.local/bin/BoilerRoom/

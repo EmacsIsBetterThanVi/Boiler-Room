@@ -1,0 +1,10 @@
+#!/bin/bash
+if [[ $BOILERRROOMPREFIX=="" ]]; then
+BOILERROOMPREFIX=~/.local/bin/BoilerRoom/
+export BOILERRROOMPREFIX
+fi
+for i in $(ls PortObjects); do
+if [[ $i == *.c ]]; then
+gcc PortObjects/$i -o $BOILERROOMPREFIX/${i#.c}
+fi
+done
