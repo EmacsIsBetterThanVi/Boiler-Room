@@ -24,6 +24,7 @@ int address = 0;
 char tokens[8][16];
 int token_id = 0;
 char *asmFile;
+char header[512] = "";
 int binaddress = 0;
 int tmp[8];
 while (file[address] != 0x00) {
@@ -47,6 +48,13 @@ while (file[address] != 0x00) {
         asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x04, tmp[0], tmp[1],
                  tmp[2], tmp[3]);
       } else if (tokens[token_id][0] == '%') {
+        tokens[token_id][0] = tokens[token_id][1];
+        tokens[token_id][1] = tokens[token_id][2];
+        tokens[token_id][2] = tokens[token_id][3];
+        if(stoh(tokens[token_id]) > 255){
+          printf("ERROR: INVALID TOKEN: %%s\n", tokens[token_id]);
+          return 5;
+        }
         binaddress = binaddress + 9;
         tmp[4] = binaddress + 1 + token_id;
         tmp[3] = tmp[4] % 256;
@@ -59,8 +67,11 @@ while (file[address] != 0x00) {
         tmp[4] = tmp[4] - (tmp[4] % 16);
         tmp[4] = tmp[4] / 16;
         tmp[0] = tmp[4];
-        asprintf(&asmFile, "%s%c%c%c%c%c", asmFile, 0x08, 0xED, 0x10, 0x0C,
+        asprintf(&asmFile, "%s%c%c%c%c%c%c%c%c%c", asmFile, 0x08, 0xED, 0x10, 0x0C,
                  stoh(tokens[token_id]), tmp[0], tmp[1], tmp[2], tmp[3]);
+      } else {
+        printf("ERROR: UNKNOWN TOKEN: %s\n", tokens[token_id]);
+        return 2;
       }
       token_id++;
     }
@@ -117,11 +128,59 @@ while (file[address] != 0x00) {
   } else if (tokens[0] == "SRAI") {
     binaddress += 2;
     asprintf(&asmFile, "%s%c%c", asmFile, 0x0f, stoh(tokens[1]));
+  } else if (tokens[0] == "INB") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x11, stoh(tokens[1]));
+  } else if (tokens[0] == "IND") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x12, stoh(tokens[1]));
+  } else if (tokens[0] == "INI") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x13, stoh(tokens[1]));
+  } else if (tokens[0] == "OUTB") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x14, stoh(tokens[1]));
+  } else if (tokens[0] == "OUTD") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x15, stoh(tokens[1]));
+  } else if (tokens[0] == "OUTI") {
+    binaddress += 2;
+    asprintf(&asmFile, "%s%c%c", asmFile, 0x16, stoh(tokens[1]));
   } else if (tokens[0] == "HLT") {
     binaddress += 1;
     asprintf(&asmFile, "%s%c", asmFile, 0xFF);
   } else if (tokens[0] == "CLA") {
     binaddress += 1;
     asprintf(&asmFile, "%s%c", asmFile, 0x10);
+  } else if(tokens[0][0] == '$'){
+    if(tokens[0] == "$inject"){
+      while(true){
+        if(file[address] == 0x00){
+          printf("ERROR: INJECT INSTUCTION DOES NOT TERMINATE\n");
+          return 4;
+        }
+        if(file[address] == '#') break;
+        tokens[1][0]=file[address];
+        address++;
+        tokens[1][1]=file[address];
+        tokens[1][2]=0x00;
+        address++;
+        asprintf(&asmFile, "%s%c", asmFile, stoh(tokens[1]));
+      }
+    } else if(tokens[0] == "$require"){
+      asprintf(&header, "%s;port %s %s;?open %s", header, tokens[1], tokens[2], tokens[2]);
+    } else if(tokens[0] == "$port"){
+      asprintf(&header, "%s;port %s %s", header, tokens[1], tokens[2]);
+    } else if(tokens[0] == "$isopen"){
+      asprint(&header, "%s;?open %s", header, tokens[1]);
+    } else if(tokens[0] == "$init") {
+      asprint(&header, "%s;init %s %s", header, tokens[1], tokens[2]);
+    }else if(tokens[0][1] != '#'){
+      printf("ERROR: UNKNOWN ASSEMBLER INSTUCTION: %s\n", tokens[0]);
+      return 3;
+    }
+  }else {
+    printf("ERROR: UNKNOWN INSTRUCTION: %s\n", tokens[0]);
+    return 1;
   }
 }

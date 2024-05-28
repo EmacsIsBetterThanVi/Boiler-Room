@@ -19,6 +19,7 @@ R255:   THIRD BYTE
 int PC;
 int tmp;
 while (true) {
+  int SP = ((REGISTERS[245] * 256 + REGISTERS[246]) * 256 + REGISTERS[247]) * 256 + REGISTERS[248];
   PC = ((REGISTERS[249] * 256 + REGISTERS[250]) * 256 + REGISTERS[251]) * 256 + REGISTERS[252];
   switch (file[PC]) {
   case 0x03: // LDAI
@@ -215,10 +216,55 @@ while (true) {
     REGISTERS[242]=0;
     REGISTERS[241]=0;
     break;
+  case 0x11: //INB
+    PC++;
+    int indentifier = file[PC] % 16
+    read(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
+  case 0x12: //IND
+    PC++;
+    int indentifier = file[PC] % 16
+    read(client_socket[indentifier], &REGISTERS[243], 1);
+    read(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
+  case 0x13: //INI
+    PC++;
+    int indentifier = file[PC] % 16
+    read(client_socket[indentifier], &REGISTERS[241], 1);
+    read(client_socket[indentifier], &REGISTERS[242], 1);
+    read(client_socket[indentifier], &REGISTERS[243], 1);
+    read(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
+  case 0x14: //OUTB
+    PC++;
+    int indentifier = file[PC] % 16
+    write(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
+  case 0x15: //OUTD
+    PC++;
+    int indentifier = file[PC] % 16
+    write(client_socket[indentifier], &REGISTERS[243], 1);
+    write(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
+  case 0x16: //OUTI
+    PC++;
+    int indentifier = file[PC] % 16
+    write(client_socket[indentifier], &REGISTERS[241], 1);
+    write(client_socket[indentifier], &REGISTERS[242], 1);
+    write(client_socket[indentifier], &REGISTERS[243], 1);
+    write(client_socket[indentifier], &REGISTERS[244], 1);
+    break;
   }
   PC++;
   if (file[PC] == 0xFF) { // HLT
     break;
+  }
+  if(INTERUPTS[0] != 0){
+    if(CheckInterupt(INTERUPTS[0])>=0){
+      SP=PUSHINT(file, SP, PC);
+      PC=InteruptJumps[INTERUPTS[0]];
+    }
+    ShiftInterupts(0);
   }
   REGISTERS[252] = PC % 256;
   PC -= PC % 256;
@@ -230,4 +276,14 @@ while (true) {
   PC -= PC % 256;
   PC = PC / 256;
   REGISTERS[249] = PC;
+  REGISTERS[248] = SP % 256;
+  SP -= SP % 256;
+  SP = SP / 256;
+  REGISTERS[247] = SP % 256;
+  SP -= SP % 256;
+  SP = SP / 256;
+  REGISTERS[246] = SP % 256;
+  SP -= SP % 256;
+  SP = SP / 256;
+  REGISTERS[245] = SP;
 }

@@ -1,4 +1,3 @@
-#include "Interrupt.c"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +5,13 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include "Interrupt.c"
+int server_socket[16];
+int client_socket[16];
+struct sockaddr_un server_addr[16];
+struct sockaddr_un client_addr[16];
 int stoh(char arg[2]) {
   int x = 0;
   switch (arg[0]) {
@@ -137,6 +143,51 @@ int options(int argc, char **argv, char *target) {
   }
   return -1;
 }
+int PUSHB(char *mem, int address, char value) {
+  mem[address] = value;
+  return address + 1;
+}
+int PUSHD(char *mem, int address, char value[2]) {
+  mem[address] = value[0];
+  mem[address+1] = value[1];
+  return address + 2;
+}
+int PUSHI(char *mem, int address, char value[4]) {
+  mem[address] = value[0];
+  mem[address+1] = value[1];
+  mem[address+2] = value[2];
+  mem[address+3] = value[3];
+  return address + 4;
+}
+int POPB(char *mem, int address, char *ret) {
+  ret[0]=mem[address];
+  return address-1;
+}
+int POPD(char *mem, int address, char *ret) {
+  ret[0]=mem[address-1];
+  ret[1]=mem[address];
+  return address-2;
+}
+int POPI(char *mem, int address, char *ret) {
+  ret[0]=mem[address-3];
+  ret[1]=mem[address-2];
+  ret[2]=mem[address-1];
+  ret[3]=mem[address];
+  return address-4;
+}
+int PUSHINT(char *mem, int address, int value){
+  mem[address+3] = value % 256;
+  value -= value % 256;
+  value = value / 256;
+  mem[address+2] = value % 256;
+  value -= value % 256;
+  value = value / 256;
+  mem[address+1] = value % 256;
+  value -= value % 256;
+  value = value / 256;
+  mem[address] = value;
+  return address+4;
+}
 int VM(char *name) {
   FILE *f = fopen(name, "r+");
   if (f == NULL) {
@@ -144,10 +195,13 @@ int VM(char *name) {
     return 1;
   }
   char *file = "";
+  char header[512]="";
+  bool header_done = false;
   char c;
   char tmp2[2] = "";
   bool tmp1 = false;
   while ((c = fgetc(f)) != -1) {
+    if(header_done){
     if (tmp1) {
       tmp2[1] = c;
       asprintf(&file, "%s%c", file, stoh(tmp2));
@@ -156,9 +210,13 @@ int VM(char *name) {
       tmp2[0] = c;
       tmp1 = true;
     }
+    } else {
+      if(c == '\n') header_done = true;
+      else asprintf(&header, "%s%c", header, c);
+    }
   }
   char REGISTERS[256];
-#include "PRG.c"
+  #include "PRG.c"
   return 0;
 }
 int as(char *name) {
@@ -173,6 +231,7 @@ int as(char *name) {
     asprintf(&file, "%s%c", file, c);
   }
 #include "ASM.c"
+  
   return 0;
 }
 int main(int argc, char **argv) {

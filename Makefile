@@ -1,4 +1,4 @@
-all: clean main
+all: clean main config
 
 CC = clang
 override CFLAGS += -g -Wno-everything -pthread -lm
@@ -14,3 +14,6 @@ main-debug: VM.c $(HEADERS)
 
 clean:
 	rm -f main main-debug
+
+config:
+	cp init.sh ~/.local/bin/BoilerRoom/
