@@ -10,6 +10,7 @@
 #include "Interrupt.c"
 int server_socket[16];
 int client_socket[16];
+int memsize = 65536;
 struct sockaddr_un server_addr[16];
 struct sockaddr_un client_addr[16];
 int stoh(char arg[2]) {
@@ -194,7 +195,7 @@ int VM(char *name) {
     printf("ERROR: COULD NOT OPEN FILE");
     return 1;
   }
-  char *file = "";
+  char *file =  calloc(,1);
   char header[512]="";
   bool header_done = false;
   char c;
@@ -236,6 +237,11 @@ int as(char *name) {
 }
 int main(int argc, char **argv) {
   if (argc > 1) {
+    int item=0;
+    if ((item = options(argc, argv, "-m")) != -1){
+      item++;
+      memsize= atoi(argv[item]);
+    }
     if ((argv[argc - 1])[0] != '-') {
       if (options(argc, argv, "-a") != -1) {
         return as(argv[argc - 1]);
@@ -264,6 +270,7 @@ int main(int argc, char **argv) {
         printf("-h  print this help message\n");
         printf("-a  assemble a program\n");
         printf("-e  execute a program\n");
+        printf("-m  set memory size\n");
         printf("-v  print version information\n");
         printf("-t  assemble and execute a program\n");
       }
