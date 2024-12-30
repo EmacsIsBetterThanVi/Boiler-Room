@@ -195,7 +195,7 @@ int VM(char *name) {
     printf("ERROR: COULD NOT OPEN FILE");
     return 1;
   }
-  char *file =  calloc(,1);
+  char *file =  calloc(memsize,1);
   char header[512]="";
   bool header_done = false;
   char c;
