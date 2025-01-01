@@ -3,14 +3,11 @@ all: clean main config ports
 CC = clang
 override CFLAGS += -g -Wno-everything -pthread -lm
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.c' -print)
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
-
 main: VM.c $(HEADERS)
-	$(CC) $(CFLAGS) VM.c -o "$@"
+	$(CC) $(CFLAGS) VM.c -o "boiler-room"
 
 main-debug: VM.c $(HEADERS)
-	$(CC) $(CFLAGS) -O0 VM.c -o "$@"
+	$(CC) $(CFLAGS) -O0 VM.c -o "boiler-room"
 
 clean:
 	rm -f main main-debug

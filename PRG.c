@@ -61,7 +61,7 @@ while (true) {
     PC++;
     REGISTERS[255] = file[PC];
     PC++;
-    tmp = ((REGISTERS[253] * 256 + REGISTERS[254]) * 256 + REGISTERS[255]) +
+    tmp = ((REGISTERS[253] * 256 + REGISTERS[254]) * 256 + REGISTERS[255]) *256 +
           file[PC];
     REGISTERS[241] = 0;
     REGISTERS[242] = 0;

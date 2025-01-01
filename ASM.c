@@ -172,9 +172,9 @@ while (file[address] != 0x00) {
     } else if(tokens[0] == "$port"){
       asprintf(&header, "%s;port %s %s", header, tokens[1], tokens[2]);
     } else if(tokens[0] == "$isopen"){
-      asprint(&header, "%s;?open %s", header, tokens[1]);
+      asprintf(&header, "%s;?open %s", header, tokens[1]);
     } else if(tokens[0] == "$init") {
-      asprint(&header, "%s;init %s %s", header, tokens[1], tokens[2]);
+      asprintf(&header, "%s;init %s %s", header, tokens[1], tokens[2]);
     }else if(tokens[0][1] != '#'){
       printf("ERROR: UNKNOWN ASSEMBLER INSTUCTION: %s\n", tokens[0]);
       return 3;
