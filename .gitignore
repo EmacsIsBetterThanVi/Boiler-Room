@@ -46,6 +46,7 @@ boiler-room
 *.pdb
 .breakpoints
 main_debug
+debug
 
 # Kernel Module Compile Results
 *.mod*

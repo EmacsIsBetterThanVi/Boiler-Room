@@ -7,14 +7,13 @@ main: VM.c $(HEADERS)
 	$(CC) $(CFLAGS) VM.c -o "boiler-room"
 
 main-debug: VM.c $(HEADERS)
-	$(CC) $(CFLAGS) -O0 VM.c -o "boiler-room"
+	$(CC) $(CFLAGS) -O0 VM.c -o "debug"
 
 clean:
-	rm -f main main-debug
+	rm -f boiler-room debug
 
 ports:
-	./buildports
-	
+	./buildports	
 config:
-	mkdir ~/.local/bin/BoilerRoom -p
+	mkdir -p ~/.local/bin/BoilerRoom
 	cp init.sh ~/.local/bin/BoilerRoom/
